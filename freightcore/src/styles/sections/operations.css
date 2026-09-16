@@ -1,0 +1,40 @@
+/* Operations — copy blocks that swap in as the canvas camera scrubs a route (later phase) */
+
+.operations {
+  background: var(--surface-base);
+}
+
+.operations .section-index,
+.operations .eyebrow,
+.operations .section-heading {
+  grid-column: 1 / -1;
+}
+
+.operations .section-heading {
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-8);
+}
+
+.operations__blocks {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: var(--space-8);
+}
+
+.operations__block {
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--hairline);
+}
+
+.operations__block-body {
+  margin-top: var(--space-2);
+  color: var(--ink-secondary);
+}
+
+@media (min-width: 768px) {
+  .operations__blocks {
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: var(--space-6);
+  }
+}

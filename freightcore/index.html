@@ -4,10 +4,182 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>freightcore</title>
+    <meta
+      name="description"
+      content="FreightCore Logistics — global freight and fleet infrastructure across 128 countries."
+    />
+    <title>FreightCore Logistics — Move freight like infrastructure</title>
   </head>
-  <body>
-    <div id="app"></div>
+  <body aria-busy="true">
+    <div id="preloader" role="status" aria-live="polite">
+      <p class="preloader__wordmark">FREIGHTCORE</p>
+      <p class="preloader__counter">
+        <span class="preloader__counter-value">000</span>
+      </p>
+      <div class="preloader__rule" aria-hidden="true"></div>
+    </div>
+
+    <div class="column-rules" aria-hidden="true"></div>
+
+    <canvas id="gl" aria-hidden="true"></canvas>
+
+    <header class="site-header">
+      <p class="site-header__wordmark">FREIGHTCORE</p>
+      <nav class="site-header__nav" aria-label="Primary">
+        <a href="#network">Network</a>
+        <a href="#scale">Scale</a>
+        <a href="#operations">Operations</a>
+      </nav>
+      <a class="button button--primary site-header__cta" href="#footer-cta">Request capacity</a>
+    </header>
+
+    <main>
+      <section id="hero" class="hero">
+        <p class="eyebrow">GLOBAL FREIGHT &amp; FLEET INFRASTRUCTURE</p>
+        <h1 class="hero__heading">Move freight like infrastructure.</h1>
+        <p class="hero__sub">
+          One contract, 128 countries, and a fleet you can see in real time. FreightCore
+          operates the physical layer so your supply chain behaves like software.
+        </p>
+        <div class="hero__actions">
+          <a class="button button--primary" href="#footer-cta">Request capacity</a>
+          <a class="button button--secondary" href="#network">View the network</a>
+        </div>
+        <p class="hero__scroll-cue">SCROLL</p>
+      </section>
+
+      <section id="network" class="network">
+        <p class="section-index">01 / 03</p>
+        <p class="eyebrow">NETWORK</p>
+        <h2 class="section-heading">Four modes. One operator.</h2>
+
+        <ol class="network__panels">
+          <li class="network__panel">
+            <p class="network__panel-index">01</p>
+            <h3 class="network__panel-heading">Ocean Freight</h3>
+            <p class="network__panel-body">
+              FCL and LCL across 42 trade lanes, with bonded transit handled end to end.
+            </p>
+          </li>
+          <li class="network__panel">
+            <p class="network__panel-index">02</p>
+            <h3 class="network__panel-heading">Overland Fleet</h3>
+            <p class="network__panel-body">
+              14,200 owned and contracted units, telemetry-tracked to the pallet.
+            </p>
+          </li>
+          <li class="network__panel">
+            <p class="network__panel-index">03</p>
+            <h3 class="network__panel-heading">Air Charter</h3>
+            <p class="network__panel-body">
+              Time-critical capacity booked in under four hours, anywhere we fly.
+            </p>
+          </li>
+          <li class="network__panel">
+            <p class="network__panel-index">04</p>
+            <h3 class="network__panel-heading">Bonded Warehousing</h3>
+            <p class="network__panel-body">
+              2.1M sq ft of customs-bonded space adjacent to primary ports.
+            </p>
+          </li>
+        </ol>
+      </section>
+
+      <section id="scale" class="scale">
+        <p class="section-index">02 / 03</p>
+        <p class="eyebrow">SCALE</p>
+        <h2 class="section-heading">Scale you can audit.</h2>
+
+        <dl class="scale__stats">
+          <div class="scale__stat">
+            <dt class="scale__stat-label">Countries served</dt>
+            <dd class="scale__stat-value">128</dd>
+          </div>
+          <div class="scale__stat">
+            <dt class="scale__stat-label">TEU moved annually</dt>
+            <dd class="scale__stat-value">2.4M</dd>
+          </div>
+          <div class="scale__stat">
+            <dt class="scale__stat-label">Fleet units under management</dt>
+            <dd class="scale__stat-value">14,200</dd>
+          </div>
+          <div class="scale__stat">
+            <dt class="scale__stat-label">On-time delivery, trailing twelve months</dt>
+            <dd class="scale__stat-value">99.2%</dd>
+          </div>
+        </dl>
+
+        <p class="scale__supporting">
+          Every figure on this page is drawn from the same operational ledger our customers
+          see. Nothing here is a marketing estimate.
+        </p>
+      </section>
+
+      <section id="operations" class="operations">
+        <p class="section-index">03 / 03</p>
+        <p class="eyebrow">OPERATIONS</p>
+        <h2 class="section-heading">The control layer.</h2>
+
+        <ol class="operations__blocks">
+          <li class="operations__block">
+            <h3 class="operations__block-heading">Real-time telemetry</h3>
+            <p class="operations__block-body">
+              Position, temperature and door state from every unit, streamed to one
+              dashboard.
+            </p>
+          </li>
+          <li class="operations__block">
+            <h3 class="operations__block-heading">Customs automation</h3>
+            <p class="operations__block-body">
+              Documentation filed ahead of arrival in 38 jurisdictions, with exceptions
+              escalated to a named broker.
+            </p>
+          </li>
+          <li class="operations__block">
+            <h3 class="operations__block-heading">Predictive capacity</h3>
+            <p class="operations__block-body">
+              Lane-level forecasting twelve weeks out, so peak season is a plan rather than
+              a scramble.
+            </p>
+          </li>
+        </ol>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__marquee" aria-hidden="true">
+        <p class="site-footer__marquee-track">
+          FREIGHTCORE — MOVING 2.4M TEU ANNUALLY — FREIGHTCORE — MOVING 2.4M TEU ANNUALLY —
+        </p>
+      </div>
+
+      <div class="site-footer__cta" id="footer-cta">
+        <h2 class="site-footer__cta-heading">Tell us what you need to move.</h2>
+        <a class="button button--primary" href="#footer-cta">Request capacity</a>
+      </div>
+
+      <nav class="site-footer__columns" aria-label="Footer">
+        <div class="site-footer__column">
+          <p class="site-footer__column-heading">Services</p>
+        </div>
+        <div class="site-footer__column">
+          <p class="site-footer__column-heading">Network</p>
+        </div>
+        <div class="site-footer__column">
+          <p class="site-footer__column-heading">Company</p>
+        </div>
+        <div class="site-footer__column">
+          <p class="site-footer__column-heading">Legal</p>
+        </div>
+      </nav>
+
+      <p class="site-footer__locations">Rotterdam · Singapore · Los Angeles · Mumbai</p>
+
+      <p class="site-footer__baseline">
+        FreightCore Logistics — a fictional brand built for a portfolio exercise.
+      </p>
+    </footer>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

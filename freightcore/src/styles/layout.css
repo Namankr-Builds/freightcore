@@ -1,0 +1,104 @@
+/* FreightCore Logistics — grid system, column rules, page-level stacking */
+
+/* ---- Stacking layers ----
+   0  #gl            fixed background canvas
+   1  .column-rules  fixed hairline grid overlay
+   2  main sections  document flow, opaque backgrounds
+   10 .site-header   fixed top bar
+   100 #preloader    full-screen gate
+*/
+
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+#gl {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.column-rules {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  --grid-cols: 4;
+}
+
+.column-rules::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--page-margin);
+  right: var(--page-margin);
+  max-width: var(--content-max);
+  margin-inline: auto;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--hairline) 0,
+    var(--hairline) 1px,
+    transparent 1px,
+    transparent calc(100% / var(--grid-cols))
+  );
+}
+
+@media (min-width: 768px) {
+  .column-rules {
+    --grid-cols: 6;
+  }
+}
+
+@media (min-width: 1024px) {
+  .column-rules {
+    --grid-cols: 12;
+  }
+}
+
+/* ---- Grid container: shared by main sections and the footer ---- */
+
+main {
+  position: relative;
+  z-index: 2;
+}
+
+.site-footer {
+  position: relative;
+  z-index: 2;
+  background: var(--surface-base);
+}
+
+main > section,
+.site-footer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-6);
+  width: min(100% - (var(--page-margin) * 2), var(--content-max));
+  margin-inline: auto;
+  padding-block: var(--section-padding);
+}
+
+@media (min-width: 768px) {
+  main > section,
+  .site-footer {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  main > section,
+  .site-footer {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+/* ---- Fixed header offset ---- */
+
+main {
+  padding-top: var(--header-height);
+}

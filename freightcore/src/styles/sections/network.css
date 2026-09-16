@@ -1,0 +1,64 @@
+/* Network — mobile: stacked panels. Desktop: panels arranged for the future
+   pinned horizontal sequence (pinning itself is added in the animation phase). */
+
+.network {
+  background: var(--surface-base);
+}
+
+.network .section-index,
+.network .eyebrow,
+.network .section-heading {
+  grid-column: 1 / -1;
+}
+
+.network .section-heading {
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-8);
+}
+
+.network__panels {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: var(--space-8);
+}
+
+.network__panel {
+  grid-column: 1 / -1;
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--hairline);
+}
+
+.network__panel-index {
+  font-family: var(--font-text);
+  font-size: var(--text-body-s);
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: var(--space-2);
+}
+
+.network__panel-body {
+  color: var(--ink-secondary);
+  margin-top: var(--space-2);
+}
+
+@media (min-width: 768px) {
+  .network__panels {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: var(--space-6);
+  }
+
+  .network__panel {
+    grid-column: span 1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .network__panels {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .network__panel {
+    grid-column: span 1;
+  }
+}

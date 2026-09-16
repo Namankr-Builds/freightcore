@@ -1,0 +1,60 @@
+/* Scale — four counters, tabular figures, each under a hairline rule */
+
+.scale {
+  background: var(--surface-base);
+}
+
+.scale .section-index,
+.scale .eyebrow,
+.scale .section-heading {
+  grid-column: 1 / -1;
+}
+
+.scale .section-heading {
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-8);
+}
+
+.scale__stats {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-8) var(--space-6);
+}
+
+.scale__stat {
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--hairline);
+}
+
+.scale__stat-value {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--text-stat);
+  line-height: var(--leading-stat);
+  letter-spacing: var(--tracking-stat);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.scale__stat-label {
+  display: block;
+  order: 2;
+  margin-top: var(--space-2);
+  font-size: var(--text-body-s);
+  color: var(--ink-secondary);
+}
+
+.scale__supporting {
+  grid-column: 1 / -1;
+  margin-top: var(--space-8);
+  color: var(--ink-secondary);
+}
+
+@media (min-width: 768px) {
+  .scale__stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

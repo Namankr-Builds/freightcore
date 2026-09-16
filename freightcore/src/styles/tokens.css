@@ -1,0 +1,115 @@
+/* FreightCore Logistics — design tokens
+   Generated from the design system. Do not hardcode values elsewhere. */
+
+:root {
+  /* ---- Colour: dark is the primary theme ---- */
+  --surface-base: #0b0d10;
+  --surface-raised: #14181d;
+  --surface-inset: #06080a;
+
+  --ink-primary: #f4f2ed;
+  --ink-secondary: #a8b0ba;
+  --ink-muted: #8b939e;
+
+  --hairline: #232830;
+
+  --signal: #ff4a1c;
+  --signal-hover: #ff7a4d;
+  --focus-ring: var(--signal-hover);
+
+  --canvas-haze: #1b2836;
+
+  /* ---- Type families ---- */
+  --font-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --font-text: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* ---- Type scale: fluid, token value is the upper bound ---- */
+  --text-display-xl: clamp(2.75rem, 9vw, 6rem);
+  --text-display-l: clamp(2.25rem, 6vw, 4rem);
+  --text-display-m: clamp(1.75rem, 4vw, 2.75rem);
+  --text-stat: clamp(2.5rem, 7vw, 4.5rem);
+  --text-heading-s: clamp(1.25rem, 2vw, 1.5rem);
+  --text-body-l: clamp(1.0625rem, 1.6vw, 1.25rem);
+  --text-body: 1rem;
+  --text-body-s: 0.875rem;
+  --text-eyebrow: 0.75rem;
+
+  --leading-display-xl: 0.92;
+  --leading-display-l: 1;
+  --leading-display-m: 1.09;
+  --leading-stat: 1;
+  --leading-heading-s: 1.33;
+  --leading-body-l: 1.6;
+  --leading-body: 1.625;
+  --leading-body-s: 1.57;
+  --leading-eyebrow: 1.33;
+
+  --tracking-display-xl: -0.03em;
+  --tracking-display-l: -0.025em;
+  --tracking-display-m: -0.02em;
+  --tracking-stat: -0.02em;
+  --tracking-heading-s: -0.01em;
+  --tracking-eyebrow: 0.18em;
+
+  --weight-regular: 400;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* ---- Spacing: 4px base ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  --section-padding: clamp(var(--space-24), 12vh, var(--space-32));
+  --page-margin: var(--space-4);
+  --content-max: 1440px;
+  --measure: 62ch;
+
+  /* ---- Radius ---- */
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-pill: 999px;
+
+  /* ---- Motion ---- */
+  --duration-micro: 0.25s;
+  --duration-ui: 0.4s;
+  --duration-reveal: 0.8s;
+  --duration-hero: 1.2s;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@media (min-width: 768px) {
+  :root { --page-margin: var(--space-12); }
+}
+
+@media (min-width: 1024px) {
+  :root { --page-margin: var(--space-16); }
+}
+
+/* Light theme is defined for completeness; the site ships dark.
+   The accent carries a different hex here so it clears 4.5:1 on the light ground. */
+[data-theme="light"] {
+  --surface-base: #f4f2ed;
+  --surface-raised: #ffffff;
+  --surface-inset: #e7e3da;
+
+  --ink-primary: #0b0d10;
+  --ink-secondary: #454d57;
+  --ink-muted: #5c6570;
+
+  --hairline: #d6d1c7;
+
+  --signal: #c43409;
+  --signal-hover: #e04a18;
+
+  --canvas-haze: #c9d3dd;
+}

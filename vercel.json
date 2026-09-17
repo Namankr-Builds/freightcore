@@ -1,0 +1,6 @@
+{
+  "framework": "vite",
+  "buildCommand": "cd freightcore && npm run build",
+  "outputDirectory": "freightcore/dist",
+  "installCommand": "cd freightcore && npm install"
+}

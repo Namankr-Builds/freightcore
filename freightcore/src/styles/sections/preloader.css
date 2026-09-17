@@ -1,6 +1,13 @@
 /* Preloader — gated on real asset promises, removed from DOM on resolve */
 
+/* Hidden by default so the page is fully readable with JavaScript disabled.
+   A later phase adds .is-loading to <body> (with aria-busy) while real
+   asset promises are pending, and removes both once they resolve. */
 #preloader {
+  display: none;
+}
+
+body.is-loading #preloader {
   position: fixed;
   inset: 0;
   z-index: 100;

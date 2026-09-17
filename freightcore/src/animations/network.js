@@ -35,11 +35,11 @@ export function init() {
     });
   });
 
-  // --- Desktop (≥ 1024px), full motion: pinned horizontal scroll ---
+  // --- Desktop (≥ 1024px), full motion: pinned full-bleed horizontal scroll ---
   mm.add('(min-width: 1024px) and (not (prefers-reduced-motion: reduce))', () => {
     const panelList = section.querySelector('.network__panels');
 
-    // Header reveal (non-scrubbed, plays once)
+    // Header reveals once on entry (not scrubbed)
     gsap.set([idx, eyebrow, heading], { opacity: 0, y: 32 });
     ScrollTrigger.create({
       trigger: section,
@@ -52,18 +52,47 @@ export function init() {
       },
     });
 
-    // Pin the section; scrub panels left
-    const panelCount = panels.length;
-    const getScrollDist = () => window.innerWidth * (panelCount - 1);
+    // Full-bleed: expand section to 100vw by shifting it left
+    // position:relative + translateX moves it visually without breaking document flow
+    const getLeft = () => section.getBoundingClientRect().left;
 
+    gsap.set(section, {
+      overflow: 'hidden',
+      position: 'relative',
+      width: '100vw',
+      maxWidth: '100vw',
+      // Restore page margin so heading text keeps its left gutter
+      paddingInline: 'var(--page-margin)',
+    });
+    // Use GSAP x so it's in the transform and doesn't fight margin-inline: auto
+    gsap.set(section, { x: () => -getLeft() });
+
+    // Panel list: flex row, each panel = 100vw
+    // paddingInline on section already gives heading the left gutter;
+    // panels break out via width:100vw and rely on their own inner padding
     gsap.set(panelList, {
       display: 'flex',
       flexWrap: 'nowrap',
-      width: () => `${panelCount * 100}vw`,
+      margin: 0,
+      padding: 0,
     });
-    panels.forEach((p) => gsap.set(p, { width: '25vw', flexShrink: 0, opacity: 1 }));
+    panels.forEach((p) => {
+      gsap.set(p, {
+        width: '100vw',
+        flexShrink: 0,
+        // Panels break out of section padding; give them their own left gutter
+        paddingLeft: 'var(--page-margin)',
+        paddingRight: 'var(--page-margin)',
+        boxSizing: 'border-box',
+        opacity: 1,
+      });
+    });
 
-    const pinTl = gsap.timeline({
+    const scrollDist = () => window.innerWidth * (panels.length - 1);
+
+    gsap.to(panelList, {
+      x: () => -scrollDist(),
+      ease: 'none',
       scrollTrigger: {
         trigger: section,
         pin: true,
@@ -71,17 +100,13 @@ export function init() {
         invalidateOnRefresh: true,
         scrub: 1,
         start: 'top top',
-        end: () => `+=${getScrollDist()}`,
+        end: () => `+=${scrollDist()}`,
         onUpdate: (self) => { state.networkProgress = self.progress; },
       },
     });
 
-    pinTl.to(panelList, {
-      x: () => -getScrollDist(),
-      ease: 'none',
-    });
-
     return () => {
+      gsap.set(section, { clearProps: 'overflow,position,width,maxWidth,paddingInline,x' });
       gsap.set(panelList, { clearProps: 'all' });
       panels.forEach((p) => gsap.set(p, { clearProps: 'all' }));
     };

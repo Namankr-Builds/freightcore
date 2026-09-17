@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { state } from '../core/state.js';
 
-const PARTICLE_COUNT = 2200;
+const PARTICLE_COUNT = 1800;
 const COARSE = window.matchMedia('(pointer: coarse)').matches;
 const DPR    = Math.min(devicePixelRatio, COARSE ? 1.5 : 2);
 
@@ -14,28 +14,26 @@ export function init() {
   const canvas = document.getElementById('gl');
   if (!canvas) return;
 
-  // ---- Renderer ----
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true });
   renderer.setPixelRatio(DPR);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setClearColor(0x000000, 0);
 
-  // ---- Scene / Camera ----
   const scene  = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 0, 18);
+  const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 200);
+  camera.position.set(0, 0, 22);
 
-  // ---- Particles ----
+  // Particles spread across a large volume so they're never clumped
   const positions = new Float32Array(PARTICLE_COUNT * 3);
   const sizes     = new Float32Array(PARTICLE_COUNT);
   const alphas    = new Float32Array(PARTICLE_COUNT);
 
   for (let i = 0; i < PARTICLE_COUNT; i++) {
-    positions[i * 3]     = (Math.random() - 0.5) * 60;
-    positions[i * 3 + 1] = (Math.random() - 0.5) * 40;
-    positions[i * 3 + 2] = (Math.random() - 0.5) * 30;
-    sizes[i]  = Math.random() * 1.8 + 0.4;
-    alphas[i] = Math.random() * 0.6 + 0.15;
+    positions[i * 3]     = (Math.random() - 0.5) * 80;
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 60;
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 40;
+    sizes[i]  = Math.random() * 1.2 + 0.3;   // small: 0.3–1.5
+    alphas[i] = Math.random() * 0.45 + 0.08; // subtle: 0.08–0.53
   }
 
   const geo = new THREE.BufferGeometry();
@@ -45,46 +43,46 @@ export function init() {
 
   const mat = new THREE.ShaderMaterial({
     uniforms: {
-      uTime:    { value: 0 },
-      uScroll:  { value: 0 },
-      uColor:   { value: new THREE.Color(0xff4a1c) },
-      uColorB:  { value: new THREE.Color(0x1b2836) },
+      uTime:   { value: 0 },
+      uScroll: { value: 0 },
+      uColor:  { value: new THREE.Color(0xff4a1c) },
+      uBase:   { value: new THREE.Color(0x1b2836) },
     },
     vertexShader: /* glsl */`
       attribute float aSize;
       attribute float aAlpha;
       uniform float uTime;
-      uniform float uScroll;
       varying float vAlpha;
 
       void main() {
         vAlpha = aAlpha;
         vec3 pos = position;
-        // gentle drift
-        pos.x += sin(uTime * 0.18 + pos.z * 0.4) * 0.4;
-        pos.y += cos(uTime * 0.12 + pos.x * 0.3) * 0.3;
-        // scroll parallax: layers closer to camera move faster
-        pos.y -= uScroll * (0.5 + (pos.z + 15.0) / 30.0);
+        pos.x += sin(uTime * 0.14 + pos.z * 0.3) * 0.5;
+        pos.y += cos(uTime * 0.10 + pos.x * 0.25) * 0.4;
 
         vec4 mv = modelViewMatrix * vec4(pos, 1.0);
-        gl_PointSize = aSize * (400.0 / -mv.z);
+        // clamp prevents enormous particles when very close
+        float sz = aSize * clamp(300.0 / -mv.z, 0.5, 12.0);
+        gl_PointSize = sz;
         gl_Position  = projectionMatrix * mv;
       }
     `,
     fragmentShader: /* glsl */`
       uniform vec3 uColor;
-      uniform vec3 uColorB;
+      uniform vec3 uBase;
       uniform float uScroll;
       varying float vAlpha;
 
       void main() {
-        float dist = length(gl_PointCoord - 0.5);
-        if (dist > 0.5) discard;
-        float soft = 1.0 - smoothstep(0.3, 0.5, dist);
-        // accent particles fade in on hero scroll
-        float accent = clamp(uScroll * 3.0, 0.0, 1.0);
-        vec3 col = mix(uColorB, uColor, accent * vAlpha);
-        gl_FragColor = vec4(col, soft * vAlpha * 0.85);
+        float d = length(gl_PointCoord - 0.5);
+        if (d > 0.5) discard;
+        float soft = 1.0 - smoothstep(0.25, 0.5, d);
+
+        // accent maxes out at 0.22 — keeps particles dim and atmospheric
+        float accent = clamp(uScroll * 2.0, 0.0, 0.22);
+        vec3 col = mix(uBase, uColor, accent);
+
+        gl_FragColor = vec4(col, soft * vAlpha * 0.7);
       }
     `,
     transparent: true,
@@ -94,11 +92,9 @@ export function init() {
 
   const points = new THREE.Points(geo, mat);
   scene.add(points);
+  scene.fog = new THREE.FogExp2(0x0b0d10, 0.012);
 
-  // ---- Fog ----
-  scene.fog = new THREE.FogExp2(0x0b0d10, 0.018);
-
-  // ---- Resize (debounced) ----
+  // Resize — debounced
   let resizeTimer;
   function onResize() {
     clearTimeout(resizeTimer);
@@ -110,28 +106,24 @@ export function init() {
   }
   window.addEventListener('resize', onResize);
 
-  // ---- Render via gsap.ticker (same RAF loop as scroll) ----
+  // Tick via shared gsap.ticker
   let stopped = false;
   function tick(time) {
     if (stopped || document.hidden) return;
     mat.uniforms.uTime.value   = time;
     mat.uniforms.uScroll.value = state.heroProgress;
 
-    // Camera: subtle scroll-driven Z pull
-    camera.position.z = 18 - state.heroProgress * 4;
-    camera.position.y = -state.opsProgress * 2;
-    camera.rotation.z = state.networkProgress * 0.06;
+    // Gentle camera drift from scroll state
+    camera.position.z = 22 - state.heroProgress * 3;
+    camera.position.y = -state.opsProgress * 1.5;
+    camera.rotation.z = state.networkProgress * 0.04;
 
     renderer.render(scene, camera);
   }
   gsap.ticker.add(tick);
 
-  // Pause when tab hidden
-  document.addEventListener('visibilitychange', () => {
-    stopped = document.hidden;
-  });
+  document.addEventListener('visibilitychange', () => { stopped = document.hidden; });
 
-  // ---- Teardown ----
   return () => {
     gsap.ticker.remove(tick);
     window.removeEventListener('resize', onResize);

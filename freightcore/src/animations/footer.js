@@ -11,38 +11,45 @@ export function init() {
   const locs     = footer.querySelector('.site-footer__locations');
   const baseline = footer.querySelector('.site-footer__baseline');
 
-  // --- Marquee: duplicate track for seamless loop ---
-  const clone = track.cloneNode(true);
-  track.parentElement.appendChild(clone);
+  // Duplicate text inside the single track so CSS scroll is seamless
+  const original = track.textContent;
+  track.textContent = original + ' ' + original;
 
-  // CSS-only infinite marquee via GSAP
-  const marqueeWidth = track.scrollWidth;
-  gsap.set(track, { x: 0 });
-  gsap.set(clone, { x: marqueeWidth });
+  // CSS animation handles the loop — no GSAP fighting Lenis
+  track.style.display = 'inline-block';
+  track.style.willChange = 'transform';
+  track.style.animation = 'marquee-scroll 22s linear infinite';
 
-  const marquee = gsap.timeline({ repeat: -1, paused: true });
-  marquee.to([track, clone], {
-    x: `-=${marqueeWidth}`,
-    duration: 20,
-    ease: 'none',
-    modifiers: {
-      x: gsap.utils.unitize((v) => parseFloat(v) % marqueeWidth),
-    },
-  });
+  // Inject the keyframe once
+  if (!document.getElementById('marquee-kf')) {
+    const style = document.createElement('style');
+    style.id = 'marquee-kf';
+    style.textContent = `
+      @keyframes marquee-scroll {
+        from { transform: translateX(0); }
+        to   { transform: translateX(-50%); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .site-footer__marquee-track { animation: none !important; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
 
+  // Pause animation when footer is off-screen
+  const marqueeEl = footer.querySelector('.site-footer__marquee');
   ScrollTrigger.create({
     trigger: footer,
     start: 'top bottom',
     end: 'bottom top',
-    onEnter: () => marquee.play(),
-    onLeave: () => marquee.pause(),
-    onEnterBack: () => marquee.play(),
-    onLeaveBack: () => marquee.pause(),
+    onEnter:      () => { track.style.animationPlayState = 'running'; },
+    onLeave:      () => { track.style.animationPlayState = 'paused'; },
+    onEnterBack:  () => { track.style.animationPlayState = 'running'; },
+    onLeaveBack:  () => { track.style.animationPlayState = 'paused'; },
   });
 
-  // --- Reduced-motion ---
+  // --- Reduced-motion: no animation ---
   mm.add(BP.reduced, () => {
-    marquee.pause();
     gsap.set([ctaHead, ctaBtn, cols, locs, baseline], { opacity: 1, y: 0 });
   });
 

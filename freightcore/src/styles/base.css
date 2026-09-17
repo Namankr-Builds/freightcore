@@ -206,5 +206,6 @@ p {
 }
 
 .button--secondary:hover {
-  border-color: var(--ink-secondary);
+  color: var(--signal);
+  border-color: var(--signal);
 }

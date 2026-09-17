@@ -50,6 +50,12 @@
   justify-self: end;
 }
 
+.site-header.is-scrolled {
+  background: rgba(11, 13, 16, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
 @media (min-width: 1024px) {
   .site-header__nav {
     display: flex;

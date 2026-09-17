@@ -48,6 +48,7 @@ body.is-loading #preloader {
   content: "";
   position: absolute;
   inset: 0;
-  width: 0%;
+  width: var(--fill, 0%);
   background: var(--signal);
+  transition: width 0.05s linear;
 }
